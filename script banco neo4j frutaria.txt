@@ -1,0 +1,108 @@
+
+CREATE (endereco1:Endereco {id_endereco: 1, rua: 'Av. Getulio Vargas', numero: 50, bairro: 'Centro', cidade: 'Diadema', uf: 'SP'})
+
+CREATE (endereco2:Endereco {id_endereco: 2, rua: 'Av. das Flores', numero: 60, bairro: 'Urauna', cidade: 'Diadema', uf: 'RJ'})
+
+CREATE (endereco3:Endereco {id_endereco: 3, rua: 'Rua das Palmeiras', numero: 100, bairro: 'Centro', cidade: 'Joinville', uf: 'SC'})
+
+
+CREATE (cliente1:Cliente {id_cliente: 1, cpf: '1234567891234567', nome: 'Jairo Santos', email: 'jairo@gmail.com', telefone: '(47) 999999912', dt_nasc: '2000-08-09'})
+
+CREATE (cliente2:Cliente {id_cliente: 2, cpf: '1234245666565555', nome: 'Bia Morais Santos', email: 'bia@gmail.com', telefone: '(47) 994459912', dt_nasc: '1990-12-09'})
+
+CREATE (cliente3:Cliente {id_cliente: 3, cpf: '0987658657363523', nome: 'Ana Maria Ribas', email: 'anam@gmail.com', telefone: '(47) 988776655', dt_nasc: '2001-08-04'})
+
+
+CREATE (funcionario1:Funcionario {matricula: 1, cpf: '12345678901', nome: 'João da Silva', dt_nasc: '1990-07-12', telefone: '47 99998060', email: 'joao@gmail.com'})
+
+CREATE (funcionario2:Funcionario {matricula: 2, cpf: '98765432109', nome: 'Maria Souza', dt_nasc: '2000-06-11', telefone: '47 99993455', email: 'maria@gmail.com'})
+
+CREATE (funcionario3:Funcionario {matricula: 3, cpf: '55555555555', nome: 'José Santos', dt_nasc: '1990-08-05', telefone: '47 988776655', email: 'jose@gmail.com'})
+
+
+CREATE (fornecedor1:Fornecedor {id_fornecedor: 1, cpf_cnpj: '78.333.123/0004-90', nome_empresa: 'Agrifrut LTDA', telefone: '47 88889999', email: 'agrifrut@gmail.com'})
+
+CREATE (fornecedor2:Fornecedor {id_fornecedor: 2, cpf_cnpj: '30.345.553/0008-91', nome_empresa: 'Legum LTDA', telefone: '47 33445599', email: 'legum@gmail.com'})
+
+CREATE (fornecedor3:Fornecedor {id_fornecedor: 3, cpf_cnpj: '20.333.453/0009-08', nome_empresa: 'Polpas LTDA', telefone: '47 45678999', email: 'polpas@gmail.com'})
+
+
+CREATE (produto1:Produto {id_produto: 1, nome: 'Tomate', quant_produto: 50, peso: 7, preco: 3.99})
+
+CREATE (produto2:Produto {id_produto: 2, nome: 'Cebola', quant_produto: 45, peso: 8, preco: 2.99})
+
+CREATE (produto3:Produto {id_produto: 3, nome: 'Limao', quant_produto: 30, peso: 4, preco: 1.99})
+
+CREATE (produto4:Produto {id_produto: 4, nome: 'Colve', quant_produto: 10, peso: 1, preco: 1.99})
+
+CREATE (produto5:Produto {id_produto: 5, nome: 'Banana', quant_produto: 30, peso: 9, preco: 2.99})
+
+CREATE (produto6:Produto {id_produto: 6, nome: 'Maçã', quant_produto: 30, peso: 9, preco: 5.99})
+
+CREATE (produto7:Produto {id_produto: 7, nome: 'Uva', quant_produto: 30, peso: 4, preco: 8.99})
+
+
+CREATE (pedido1:Pedido {id_pedido: 1, quant_pedido: 3, dt_pedido: '2023-08-09'})
+CREATE (pedido2:Pedido {id_pedido: 2, quant_pedido: 8, dt_pedido: '2023-03-16'})
+CREATE (pedido3:Pedido {id_pedido: 3, quant_pedido: 15, dt_pedido: '2023-03-09'})
+CREATE (pedido4:Pedido {id_pedido: 4, quant_pedido: 5, dt_pedido: '2023-08-12'})
+
+
+CREATE (cliente1)-[:MORA]->(endereco2)
+CREATE (cliente2)-[:MORA]->(endereco1)
+CREATE (cliente3)-[:MORA]->(endereco3)
+
+CREATE (funcionario1)-[:MORA]->(endereco1)
+CREATE (funcionario2)-[:MORA]->(endereco2)
+CREATE (funcionario3)-[:MORA]->(endereco3)
+
+CREATE (fornecedor1)-[:MORA]->(endereco1)
+CREATE (fornecedor2)-[:MORA]->(endereco2)
+CREATE (fornecedor3)-[:MORA]->(endereco3)
+
+
+CREATE (fornecedor1)-[:FORNECE]->(produto1)
+CREATE (fornecedor1)-[:FORNECE]->(produto2)
+CREATE (fornecedor1)-[:FORNECE]->(produto4)
+
+CREATE (fornecedor2)-[:FORNECE]->(produto3)
+CREATE (fornecedor2)-[:FORNECE]->(produto7)
+CREATE (fornecedor2)-[:FORNECE]->(produto6)
+
+
+CREATE (fornecedor3)-[:FORNECE]->(produto5)
+CREATE (fornecedor3)-[:FORNECE]->(produto7)
+CREATE (fornecedor3)-[:FORNECE]->(produto6)
+CREATE (fornecedor3)-[:FORNECE]->(produto4)
+CREATE (fornecedor3)-[:FORNECE]->(produto1)
+
+
+
+CREATE (pedido1)-[:CONTEM]->(produto1)
+CREATE (pedido1)-[:CONTEM]->(produto5)
+CREATE (pedido1)-[:CONTEM]->(produto6)
+CREATE (pedido1)-[:FEITO_POR]->(cliente1)
+CREATE (pedido1)-[:ATENDIDO_POR]->(funcionario2)
+
+
+CREATE (pedido2)-[:CONTEM]->(produto2)
+CREATE (pedido2)-[:CONTEM]->(produto7)
+CREATE (pedido2)-[:CONTEM]->(produto4)
+CREATE (pedido2)-[:FEITO_POR]->(cliente3)
+CREATE (pedido2)-[:ATENDIDO_POR]->(funcionario1)
+
+
+CREATE (pedido3)-[:CONTEM]->(produto1)
+CREATE (pedido3)-[:CONTEM]->(produto4)
+CREATE (pedido3)-[:CONTEM]->(produto3)
+CREATE (pedido3)-[:FEITO_POR]->(cliente2)
+CREATE (pedido3)-[:ATENDIDO_POR]->(funcionario3)
+
+
+CREATE (pedido4)-[:CONTEM]->(produto2)
+CREATE (pedido4)-[:CONTEM]->(produto7)
+CREATE (pedido4)-[:CONTEM]->(produto3)
+CREATE (pedido4)-[:FEITO_POR]->(cliente1)
+CREATE (pedido4)-[:ATENDIDO_POR]->(funcionario1)
+
+

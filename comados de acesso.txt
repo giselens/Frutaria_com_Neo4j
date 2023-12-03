@@ -1,0 +1,8 @@
+sudo cypher-shell
+
+username: neo4j
+password: banconeo4j
+
+pip install neo4j-driver (API DO PYTHON )
+
+rodar no terminal (python3 nomearquivo)
