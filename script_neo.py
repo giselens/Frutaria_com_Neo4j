@@ -53,6 +53,11 @@ def cadastrar_cliente(id,cpf, nome, email, telefone, nascimento, id_endereco):
     feedback = "Dados inseridos com sucesso!"
     return feedback
 
-lista_clientes()
-resposta = cadastrar_cliente(4,'666666','Marta','mart@gmail.com','337733','1999-04-01',1)
-print(resposta)
+def deletar_cadastro_de_cliente(id_cliente):
+    selectconsulta = f""" MATCH (n:Cliente {{id_cliente: {id_cliente}}}) DETACH DELETE n"""
+    execute(selectconsulta)
+
+    feedback = "Cadastro apagado!"
+    return feedback
+
+print(deletar_cadastro_de_cliente(3))

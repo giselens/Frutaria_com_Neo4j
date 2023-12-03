@@ -6,3 +6,5 @@ password: banconeo4j
 pip install neo4j-driver (API DO PYTHON )
 
 rodar no terminal (python3 nomearquivo)
+
+para o navegador: http://localhost:7474/browser/
