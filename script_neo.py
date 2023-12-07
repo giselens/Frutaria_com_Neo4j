@@ -257,11 +257,63 @@ def lista_produto():
         print("\n")
 
 def deletar_produto(id_produto):
+
     selectconsulta = f""" MATCH (n:Produto {{id_produto: {id_produto}}}) DETACH DELETE n"""
     execute(selectconsulta)
 
     feedback = "Cadastro apagado!"
     return feedback
+
+
+def relatorio_pedido_cliente():
+
+    selectconsulta = f""" MATCH (n:Pedido) - [:FEITO_POR] ->(c:Cliente) 
+                        RETURN distinct c.nome ,count(n.id_pedido); """
+    
+    lista = execute(selectconsulta)
+
+    print("\n ------------ RELATÓRIO DE VENDAS-------------\n")
+
+    for record in lista:
+        
+        
+        print("Nome do Cliente:", record['c.nome'])
+        print("Quantidade de pedidos:", record['count(n.id_pedido)'])
+       
+        print("\n------------------------------------\n")
+
+
+def relatorio_fornecimento_produto():
+
+    selectconsulta = f""" MATCH (n:Fornecedor)- [:FORNECE]->(p:Produto) 
+        RETURN distinct n.nome_empresa ,count(p.id_produto);"""
+    
+    lista = execute(selectconsulta)
+
+    print("\n ------------ RELATÓRIO DE FORNECIMENTO-------------\n")
+    for record in lista:
+        
+        
+        print("Nome do Fornecedor:", record['n.nome_empresa'])
+        print("Quantidade de produtos fornecidos:", record['count(p.id_produto)'])
+       
+        print("\n------------------------------------\n")
+
+def relatorio_clientes_por_cidade():
+    selectconsulta = f""" MATCH (n:Cliente)- [:MORA]->(e:Endereco) 
+    RETURN distinct e.cidade ,count(n.id_cliente);"""
+
+    lista = execute(selectconsulta)
+
+    print("\n ------------ RELATÓRIO DE CLIENTES POR CIDADES-------------\n")
+    for record in lista:
+        
+        
+        print("Cidade:", record['e.cidade'])
+        print("Quantidade de Clientes:", record['count(n.id_cliente)'])
+       
+        print("\n------------------------------------\n")
+
 
 def menu():
     print("\n")
@@ -302,7 +354,7 @@ def menu():
     print("\n")
     print("-----------Relatórios-----------------")
     print("18. Total de pedidos por cliente")
-    print("19. Total de produtos por fornecedor")
+    print("19. Total de produtos fornecido por cada fornecedor")
     print("20. Total de Clientes por cidade")
     
     print("\n")
@@ -387,6 +439,8 @@ def tratamentodeopcoes(opcao):
             return lf
     
     if opcao == "8":
+        id_f = input("Digite o código do fornecedor: ")
+
         nome = input("Empresa: ")
 
         cpf_cnpj = input("Cpf/Cnpj: ")
@@ -396,13 +450,28 @@ def tratamentodeopcoes(opcao):
         telefone = input("Telefone: ")
 
         print("\n------Endereço------\n")
+        id_e = input("Digite o código do endereco:")
         rua = input("Rua:")
         numero1 = input("Numero:")
         bairro = input("Bairro:")
         cidade = input("Cidade:")
         estado = input("Estado:")
 
-        #FAZER O RESTO
+        cadastrar_endereco(id_e, rua, numero1, bairro, cidade, estado)
+        ic = cadastrar_fornecedor(id_f,cpf_cnpj, nome, email, telefone)
+
+        idc_string = str(id_f)
+        noc = 'fornecedor'+idc_string
+       
+        ide_string = str(id_e)
+        noe = 'endereco'+ide_string
+        
+        relacionamento = "MORA"
+
+        relacionamentos(id_f,id_e,noc,noe,relacionamento,'id_fornecedor','id_endereco','Fornecedor','Endereco')
+
+        return ic
+
 
     if opcao == "9":
         codigo = input("Digite o código do Fornecedor que deseja apagar:")
@@ -418,14 +487,29 @@ def tratamentodeopcoes(opcao):
         id_pedido = input("Número do Pedido: ")
         quant_pedido = input("Quantidade do Pedido: ")
         dt_pedido = input("Data do Pedido: ")
-        print("\n------Endereço Para Receber Pedido------\n")
+      
+        print("\n------Endereço------\n")
+        id_e = input("Digite o código do endereco:")
         rua = input("Rua:")
         numero1 = input("Numero:")
         bairro = input("Bairro:")
         cidade = input("Cidade:")
         estado = input("Estado:")
 
-        #FAZER O RESTO 
+        cadastrar_endereco(id_e, rua, numero1, bairro, cidade, estado)
+        lpd = cadastrar_pedido(id_pedido,quant_pedido,dt_pedido)
+
+        idc_string = str(id_pedido)
+        noc = 'pedido'+idc_string
+       
+        ide_string = str(id_e)
+        noe = 'endereco'+ide_string
+        
+        relacionamento = "ENTREGAR"
+
+        relacionamentos(id_pedido,id_e,noc,noe,relacionamento,'id_pedido','id_endereco','Pedido','Endereco')
+
+        return lpd
 
     if opcao == "12":
 
@@ -443,16 +527,30 @@ def tratamentodeopcoes(opcao):
         cpf_funcionario = input("Cpf do Funcionario: ")
         nome_func = input("Nome do Funcionario: ")
         dt_nasc_func = input("Data de Nascimento: ")
-        telefone_func= input("Telefone ")
+        telefone_func= input("Telefone: ")
         email_func = input("E-mail: ")
         print("\n------Endereço Funcionario------\n")
+        id_e = input("ID do endereço:")
         rua = input("Rua:")
         numero1 = input("Numero:")
         bairro = input("Bairro:")
         cidade = input("Cidade:")
         estado = input("Estado:")
 
-        #FAZER O RESTO
+        cadastrar_endereco(id_e, rua, numero1, bairro, cidade, estado)
+        lpd = cadastrar_funcionario(matricula,cpf_funcionario,nome_func,dt_nasc_func,telefone_func,email_func)
+
+        idc_string = str(matricula)
+        noc = 'funcionario'+idc_string
+       
+        ide_string = str(id_e)
+        noe = 'endereco'+ide_string
+        
+        relacionamento = "MORA"
+
+        relacionamentos(matricula,id_e,noc,noe,relacionamento,'matricula','id_endereco','Funcionario','Endereco')
+
+        return lpd
 
     if opcao == "15":
         matricula = input("Digite a matricula do funcionário que deseja apagar:")
@@ -470,6 +568,16 @@ def tratamentodeopcoes(opcao):
 
        return le
     
-   # if opcao == "18":
-    #if opcao == "19":
-    #if opcao == "20":
+    if opcao == "18":
+        relatorio_pedido_cliente()
+        return " "
+    if opcao == "19":
+        relatorio_fornecimento_produto()
+        return " "
+    
+    if opcao == "20":
+        relatorio_clientes_por_cidade()
+        return " "
+    
+op = menu()
+print(tratamentodeopcoes(op))
